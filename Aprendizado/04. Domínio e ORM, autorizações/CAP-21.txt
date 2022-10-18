@@ -1,0 +1,49 @@
+Neste capitulo implementamos a busca de um usuário por ID:
+
+	
+- Criamos a classe UserDTO no pacote dto;
+
+
+- Na classe UserService criamos o método findById(Long id):
+
+		@Transactional(readOnly = true)
+		public UserDTO findById(Long id) {
+			authService.validateSelfOrAdmin(id);
+			Optional<User> obj = repository.findById(id);
+			User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+			return new UserDTO(entity);
+		}
+
+- Criamos a classe UserResource, dentro do pacote resources. Essa classe foi anotada com @RestController e @RequestMapping(value = "/users"). Criamos
+O método que vai tratar a requesição para listar um Usuário via id:
+
+		@RestController
+		@RequestMapping(value = "/users")
+		public class UserResource {
+
+			@Autowired
+			private UserService service;
+			
+			@GetMapping(value = "/{id}")
+			public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+				UserDTO dto = service.findById(id);
+				return ResponseEntity.ok().body(dto);
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+		
+
+	
+
+
+
+

@@ -1,0 +1,26 @@
+Neste capitulo vamos implementar o Refresh Token:
+
+
+- O que é Refresh Token? É um novo Token, ele não é o mesmo Token de Autorização, ou seja, não serve para o Cliente fazer uma request! Esse novo Token serve
+para gerar um novo Token, ou seja, com o Refresh Token o Cliente receberá um novo Token de Autorização.
+
+
+- Para implementar esse Refresh Token fizemos:
+
+	1) Hoje quando acessamos o path /oauth/token para gerar um Token de Autorização recebemos como resposta o access_token, token_type, expires_in, scope, 
+	userName e userId. Vamos adicionar nessa resposta o campo refresh_token. Vamos na classe AuthorizationServerConfig, ir no método 
+	configure(ClientDetailsServiceConfigurer clients) e adicionar em authorizedGrantTypes() o valor: "refresh_token". Devemos ainda, nesse mesmo método
+	configurar a duração do refresh_token, para isso foi adicionado o .refreshTokenValiditySeconds(jwtDuration);
+
+	2) Ainda na classe AuthorizationServerConfig, criamos o atributo do tipo UserDetailsService e anotamos ele com @Autowired
+
+	3)  Ainda na classe AuthorizationServerConfig, no método configure(AuthorizationServerEndpointsConfigurer endpoints) foi adicionado ao endpoints o 
+	valor: .userDetailsService(userDetailsService);
+
+
+- Agora já temos o retorno do Refresh Token na resposta de /oauth/token. Lembre-se que ele não serve pro cliente fazer uma request e sim pra gerar um novo
+Token!
+
+
+- Para usar o refresh_token, basta fazer a request para /oauth/token, enviando apenas o valor do refreh_token no body, não precisa mais passar user e password
+Lembre-se que agora o grant_type serádo tipo refresh_token! A resposta dessa request será um novo Token de Autorização!

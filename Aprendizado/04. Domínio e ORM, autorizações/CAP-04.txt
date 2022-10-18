@@ -1,0 +1,9 @@
+Neste capitulo fizemos o Setup do projeto DSLearn:
+
+
+- Fizemos o download do projeto através do link: https://drive.google.com/file/d/1Mg_pqOyWsdIH6prjY9D94XDm5c1--zOO/view?usp=sharing e abrimos o mesmo
+na IDE;
+
+
+- Lembre-se de iniciar o repositório do GIT no projeto (na pasta backend).
+

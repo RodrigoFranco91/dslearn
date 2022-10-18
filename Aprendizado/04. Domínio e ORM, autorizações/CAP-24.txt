@@ -1,0 +1,28 @@
+Neste capitulo vamos implementar o retorno de conteúdo customizado para usuário logado. Essa implementação será a nivel de Serviço!
+
+
+- O exemplo feito aqui será o Usuario logado acessar suas suas notificações! Aqui não haverá uma verificação se ele pode ou não acessar a notificação,
+aqui queremos acessar um /notifications e ver só o que é dele!
+
+
+- Criamos primiramente no pacote dto a classe NotificationDTO;
+
+
+- Criamos a classe NotificationService no pacote services. Criamos nessa classe o método notificationsForCurrentUser(), lembre-se que devemos usar a
+paginação!
+
+
+- Para conseguirmos pegar as notificações só do usuário logado temos que pegar o Usuario logado, vamos para isso usar o método authenticated() da classe
+AuthService. Então na classe NotificationService injetamos um AuthService.
+
+
+- Tivemos que criar na interface NotificationRepository o método: 
+
+		Page<Notification> findByUser(User user, Pageable pageable);
+
+
+- Voltaremos pra classe NotificationService, vamos injetar um NotificationRepository e chamar o método findByUser() dentro do método 
+notificationsForCurrentUser()
+
+
+- Criamos agora no pacote resources a classe NotificationsResource (é nosso controller) e criamos o método notificationsForCurrentUser();

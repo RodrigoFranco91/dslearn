@@ -1,0 +1,14 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+
+- Continuamos a criar as classes de modelo, ou seja, do pacote Entities. Lembre-se de iniciar pelas classes que não dependem de ninguem e depois vá para
+as classes cujo as dependencias já estão criadas;
+
+
+- Criamos o pacote enums;
+
+
+- Alteramos o arquivo data.sql para continuar o povoamento;
+
+
+

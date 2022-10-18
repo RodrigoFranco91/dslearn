@@ -1,0 +1,85 @@
+Neste capitulo vamos continuar a implementação em nível de serviço:
+
+
+- Agora o usuário só poderá fazer um findById de User para buscar seu próprio usuário, ou seja, se o User logado tem ID = 1 ele só poderá fazer o findById de
+User se buscar pelo ID = 1;
+
+
+- Poderiamos criar na classe UserService um método para retornar sempre o User logado, mas vamos fazer isso em outra Classe (escolha do professor).
+Criamos a classe AuthService e criamos o metodo authenticated(), esse método vai retornar o User logado. Veja como ficou:
+
+		@Service
+		public class AuthService {
+
+			@Autowired
+			private UserRepository userRepository;
+			
+			@Transactional(readOnly = true)
+			public User authenticated() {
+				try {
+					String username = SecurityContextHolder.getContext().getAuthentication().getName();
+					return userRepository.findByEmail(username);
+				}
+				catch (Exception e) {
+					throw new UnauthorizedException("Invalid user");
+				}
+			}
+			
+		}
+
+	Veja que o método SecurityContextHolder.getContext().getAuthentication().getName() retorna o email do User logado, isso é desse jeito pois na classe
+	de entidade User o método @overrride de UserDetails ficou assim: 
+
+			@Override
+			public String getUsername() {
+				return email;
+			}
+
+
+- Agora na classe AuthService vamos criar o método que vai comparar se o ID informado pelo Cliente é igual do User logado. 
+Ou então se o User logado tem papel de Admin. Veja como será esse método:
+
+			public void validateSelfOrAdmin(Long userId) {
+				User user = authenticated();
+				if (!user.getId().equals(userId) && !user.hasHole("ROLE_ADMIN")) {
+					throw new ForbiddenException("Access denied");
+				}
+			}
+
+	Para funcionar o código anterior, tivemos que criar na classe User do pacote entities:
+
+		public boolean hasHole(String roleName) {
+			for (Role role : roles) {
+				if (role.getAuthority().equals(roleName)) {
+					return true;
+				}
+			}
+			return false;
+		}	
+
+
+- Agora na classe UserService temos que editar o método findById(), temos que chamar o método validateSelfOrAdmin() da classe AuthService. Veja como ficou:
+
+		@Transactional(readOnly = true)
+		public UserDTO findById(Long id) {
+			authService.validateSelfOrAdmin(id);
+			Optional<User> obj = repository.findById(id);
+			User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+			return new UserDTO(entity);
+		}
+
+
+
+
+
+
+
+
+
+		
+
+	
+
+
+
+

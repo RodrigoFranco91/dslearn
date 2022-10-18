@@ -1,0 +1,23 @@
+Neste capitulo iniciamos a codificação do projeto DSLearn:
+
+
+- Configurar o arquivo application.properties;
+
+
+- Duplicar o arquivo application.properties, mas com nome application-test.properties;
+
+
+- Criamos o pacote entities;
+
+
+- Começamos a criar as classes de modelo dentro do pacote entities;
+
+
+- Lembre-se de relacionamento N-N usar SET, pois este não aceita repetição
+
+
+- Na pasta resource criamos o arquido data.sql para povoar o banco de dados
+
+
+
+

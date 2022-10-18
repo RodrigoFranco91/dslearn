@@ -1,0 +1,8 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+
+- Professor apresentou duas correções no projeto:
+
+	- Colocou o Spring na versão 2.4.4;
+
+	- O construtor da classe User foi corrigido, foi retirado dele o atributo Set<Role> roles.

@@ -1,0 +1,43 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+- Alteramos o arquivo data.sql para continuar o povoamento, neste caso foi para povoar as tabelas: tb_lesson juntamente com suas filhas. Veja o código:
+
+
+- Cadastro de Lesson com Content:
+
+INSERT INTO tb_lesson (title, position, section_id) VALUES ('Aula 1 do capítulo 1', 1, 1);
+INSERT INTO tb_content (id, text_Content, video_Uri) VALUES (1, 'Material de apoio: abc', 'https://www.youtube.com/watch?v=sqbqoR-lMf8'); 
+
+INSERT INTO tb_lesson (title, position, section_id) VALUES ('Aula 2 do capítulo 1', 2, 1);
+INSERT INTO tb_content (id, text_Content, video_Uri) VALUES (2, '', 'https://www.youtube.com/watch?v=sqbqoR-lMf8'); 
+
+INSERT INTO tb_lesson (title, position, section_id) VALUES ('Aula 3 do capítulo 1', 3, 1);
+INSERT INTO tb_content (id, text_Content, video_Uri) VALUES (3, '', 'https://www.youtube.com/watch?v=sqbqoR-lMf8'); 
+
+	Lembre-se que a classe Lesson é abstrata, pois ela é pai/mãe, logo temos também que cadastrar uma classe filha, nesse caso foi a tabela de tb_content.
+	
+	A associação de filha pra pai é através do campo id, ou seja, a primary_key do pai vai para o filho também - Veja que na classe Content não temos o
+	atributo id, mas para o insert no banco usamos a coluna id (Valor do ID do pai vai para o filho).
+
+
+- Cadastro de Lesson com Task:
+
+INSERT INTO tb_lesson (title, position, section_id) VALUES ('Tarefa do capítulo 1', 4, 1);
+INSERT INTO tb_task (id, description, question_Count, approval_Count, weight, due_Date) VALUES (4, 'Fazer um trabalho legal', 5, 4, 1.0, TIMESTAMP WITH TIME ZONE '2020-11-25T13:00:00Z');
+
+	A associação de filha pra pai é através do campo id, ou seja, a primary_key do pai vai para o filho também - Veja que na classe Task não temos o
+	atributo id, mas para o insert no banco usamos a coluna id (Valor do ID do pai vai para o filho).
+
+
+- Cadastro na tabela tb_lessons_done. Essa tabela é uma tabela que surgiu do relacionamento N:N entre Lesson e Enrollment:
+
+INSERT INTO tb_lessons_done (lesson_id, user_id, offer_id) VALUES (1, 1, 1);
+INSERT INTO tb_lessons_done (lesson_id, user_id, offer_id) VALUES (2, 1, 1);
+
+
+- Sabemos que existe o relacionamento N:N entre Lesson e Enrollment, mas até agora somente Lesson conhece Enrollment, ou seja, Lesson sabe quais matriculas
+a fizeram (concluiram a lesson). Vamos fazer o relacionamento de Enrollment com Lesson, ou seja, na classe Enrollment devemos adicionar:
+
+	@ManyToMany(mappedBy = "enrollmentsDone")
+	private Set<Lesson> lessonsDone = new HashSet<>();
+

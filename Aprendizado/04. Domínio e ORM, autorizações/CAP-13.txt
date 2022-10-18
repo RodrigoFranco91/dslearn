@@ -1,0 +1,41 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+- Continuamos a criar as classes de modelo, ou seja, do pacote Entities. Lembre-se de iniciar pelas classes que não dependem de ninguem e depois vá para
+as classes cujo as dependencias já estão criadas;
+
+
+- Aqui Implementamos a Herança, no caso a clase pai/mãe é Lesson e as filhas são Task e Content;
+
+
+- Lembre-se que no nosso negócio não existe uma entidade que seja só Lesson, ou seja, que seja só pai, logo esse classe tem que ser Abstrata!
+
+
+- A classe pai, no caso Lesson recebrá anotação: @Inheritance(strategy = InheritanceType.JOINED) a Strage define como o JPA vai criar as tabelas, tem a opção
+de gerar uma única tabela com atributos de todos os filhos mais os atributos do pai (SINGLE_TABLE). 
+Outra estrategia é criar uma tabela para cada um, uma pro pai e uma pra cada filho (JOINED). 
+Outra estratégia é parecida com a JOINED, mas só cria tabela para classes concretas, logo aqui teriamos apenas as tabelas das filhas e cada tabela da filha tera os atributos da mãe (TABLE_PER_CLASS)
+
+
+- As classes filhas recebem as anotações:
+
+		@Entity
+		@Table(name = "name_da_table")
+
+
+- A classe pai (Lesson) tem um relacionamento N:N com a classe Enrollment - Lembre-se que a classe Enrollment é uma classe resultante de um outro 
+relacionamento N:N, no caso entre User e Offer, e sua chave primária é composta por dois ID's (user_id e offer_id) - Veja como ficou a classe Lesson:
+
+			@ManyToMany
+			@JoinTable(name = "tb_lessons_done",
+				joinColumns = @JoinColumn(name = "lesson_id"),
+				inverseJoinColumns = {
+						@JoinColumn(name = "user_id"),
+						@JoinColumn(name = "offer_id")
+				}
+			)
+			private Set<Enrollment> enrollmentsDone = new HashSet<>();
+
+	Atente-se que em inverseJoinColumns tivemos que indicar os dois campos que formam o id de Enrollment
+
+
+

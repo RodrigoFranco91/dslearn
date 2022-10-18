@@ -1,0 +1,84 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+- Continuamos a criar as classes de modelo, ou seja, do pacote Entities. Lembre-se de iniciar pelas classes que não dependem de ninguem e depois vá para
+as classes cujo as dependencias já estão criadas;
+
+
+- Aqui implementamos a classe Enrollment, que é uma classe de associação (aquela intemediaria do relacionamento N - N) e essa classe tem atributos além das
+chaves externas (USER_ID e OFFER_ID) e essas duas chaves externas que copoem a chave primária da classe Enrollment. Mas aqui temos um problema, no JPA não 
+existe chave composta, então teremos que criar uma classe auxiliar para ter as duas chaves externas (USER_ID e OFFER_ID) e essa classe auxiliar que será
+o identificador da classe Enrollment;
+
+	A classe Enrollment ficou assim:
+
+			@Entity
+			@Table(name = "tb_enrollment")
+			public class Enrollment {
+
+				@EmbeddedId
+				private EnrollmentPK id = new EnrollmentPK();
+				
+				@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+				private Instant enrollMoment;
+
+				@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+				private Instant refundMoment;
+				private boolean available;
+				private boolean onlyUpdate;
+
+				@ManyToMany(mappedBy = "enrollmentsDone")
+				private Set<Lesson> lessonsDone = new HashSet<>();
+				
+				@OneToMany(mappedBy = "enrollment")
+				private List<Deliver> deliveries = new ArrayList<>();
+
+			public Enrollment(User user, Offer offer, Instant enrollMoment, Instant refundMoment, boolean available,
+					boolean onlyUpdate) {
+				super();
+				id.setUser(user);
+				id.setOffer(offer);
+				this.enrollMoment = enrollMoment;
+				this.refundMoment = refundMoment;
+				this.available = available;
+				this.onlyUpdate = onlyUpdate;
+			}
+		
+	Veja o macete do construtor para settar o atributo id;
+
+	Veja como ficou o SET e GET do ID:
+
+			public User getStudent() {
+				return id.getUser();
+			}
+			
+			public void setStudent(User user) {
+				id.setUser(user);
+			}
+
+			public Offer getOffer() {
+				return id.getOffer();
+			}
+			
+			public void setOffer(Offer offer) {
+				id.setOffer(offer);
+			}			
+			
+	Veja que a classe Auxiliar para ser Primary Key (id) foi chamada de EnrollmentPK e essa classe ficou assim no pacote pk (Não esqueça do NEW no atributo):
+
+			@Embeddable
+			public class EnrollmentPK implements Serializable {
+				private static final long serialVersionUID = 1L;
+
+				@ManyToOne
+				@JoinColumn(name = "user_id")
+				private User user;
+
+				@ManyToOne
+				@JoinColumn(name = "offer_id")
+				private Offer offer;
+	
+
+- Alteramos o arquivo data.sql para continuar o povoamento;
+
+
+

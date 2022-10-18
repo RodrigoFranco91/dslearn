@@ -1,0 +1,97 @@
+Neste capitulo vamos iniciar a implementação em nível de serviço:
+
+
+- Hoje para fazermos uma Request é preciso enviar um Token e a implementação que estamos usando é o Oauth2. Caso a gente envie algo errado no Token vamos
+receber uma response padrão de erro do próprio OAuth2. Vamos criar uma classe que representa essa mesma estrutura de erro, pois assim vamos seguir um padrão.
+No pacote resources.excepetions criamos a classe OAuthCustomError:
+
+		public class OAuthCustomError implements Serializable {
+			private static final long serialVersionUID = 1L;
+
+			private String error;
+			
+			@JsonProperty("error_description")
+			private String errorDescription;
+			
+			public OAuthCustomError() {
+			}
+
+			public OAuthCustomError(String error, String errorDescription) {
+				super();
+				this.error = error;
+				this.errorDescription = errorDescription;
+			}
+
+			public String getError() {
+				return error;
+			}
+
+			public void setError(String error) {
+				this.error = error;
+			}
+
+			public String getErrorDescription() {
+				return errorDescription;
+			}
+
+			public void setErrorDescription(String errorDescription) {
+				this.errorDescription = errorDescription;
+			}
+		}
+
+	Veja que usamos o @JsonProperty("error_description"), pois assim o atributo errorDescription será mostrado como error_description, ou seja, vamos
+	seguir o padrão do OAuth2
+
+- Agora vamos criar algumas Exceptions específicas, que vamos lançar quando algo ocorrer. As classes serão criadas no pacote service.exceptions. Devemso
+criar duas classes, a ForbiddenException (Usuário tá logado, mas não tem permissão para acessar o que ele quer) e UnauthorizedException (aqui o Token é
+inválido)
+
+		public class ForbiddenException extends RuntimeException {
+			private static final long serialVersionUID = 1L;
+
+			public ForbiddenException(String msg) {
+				super(msg);
+			}
+		}
+
+		public class UnauthorizedException extends RuntimeException {
+			private static final long serialVersionUID = 1L;
+
+			public UnauthorizedException(String msg) {
+				super(msg);
+			}
+		}
+
+- Agora na classe ResourceExceptionHandler devemos criar métodos que vão tratar as duas Exceptions que criamos anteriormente. Ficaram assim os métodos:
+
+			@ExceptionHandler(ForbiddenException.class)
+			public ResponseEntity<OAuthCustomError> forbidden(ForbiddenException e, HttpServletRequest request) {
+				OAuthCustomError err = new OAuthCustomError("Forbidden", e.getMessage());
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+			}
+
+			@ExceptionHandler(UnauthorizedException.class)
+			public ResponseEntity<OAuthCustomError> unauthorized(UnauthorizedException e, HttpServletRequest request) {
+				OAuthCustomError err = new OAuthCustomError("Unauthorized", e.getMessage());
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+			}	
+
+	Veja que estamos retornando um objeto do tipo OAuthCustomError, que criamos anteriormente!
+
+- Agora vamos aplicar a regra: Usuário logado do tipo Estudante só poderá buscar o seu próprio usuário, ou seja, se User com ID = 1 ta logado ele só poderá
+fazer a Request de UserById passando o ID = 1. Isso será feito no próximo capítulo.
+		
+
+
+
+
+
+
+
+		
+
+	
+
+
+
+

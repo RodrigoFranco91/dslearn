@@ -1,0 +1,5 @@
+Neste capitulo foi apresentado que o projeto que vamos fazer agora se chamará DSLearn. Além disso o professor deu mais detalhes sobre o projeto.
+
+
+- Visitamos os diagramas do dslearn para entendermos o que será desenvolvido;
+	

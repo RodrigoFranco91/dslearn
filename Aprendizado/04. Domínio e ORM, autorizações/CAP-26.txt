@@ -1,0 +1,25 @@
+Neste capitulo foi implementado a pré-autorização (via perfil de usuário) via anotação no Controller ou Service:
+
+
+- Nos capítulos anteriores implementamos uma lógica que apenas usuário do tipo Admin poderia fazer uma listagem de usuários de qualquer ID (veja a classe
+AuthService). Agora vamos ver outra maneira de se fazer isso, usando apenas anotação que pode ser na classe controller ou na classe service. Vamos implementar
+a correção do professor de uma entrega do aluno (Deliver), mas somente usuário do tipo Admin ou Instructor poderão realizar essa correção. Siga os passos:
+
+
+	1) Vamos criar a classe DeliverRevisionDTO, essa será a casca que o professor vai enviar da correção;
+
+	2) Criamos a classe DeliverService e criamos o método  saveRevision(), esse método será tipo um update para uma Deliver existente. Precisamos injetar
+	nessa classe o DeliverRepository;
+
+	3) Vamos criar agora a classe DeliverReousece (é nosso controller). Criamos aqui um método @PUT. Lembre-se que precisamos injetar nessa classe um
+	DeliverService
+
+	4) Agora vamos configurar para que apenas usuários do tipo Admin ou Instructor possam bater no método PUT criado no passo anterior. 
+	Vamos autorizar esse endpoint com anotação, para isso precisamos configurar o Spring, então na classe WebSecurityConfig adicionar a anotação:
+	@EnableGlobalMethodSecurity(prePostEnabled = true)
+	
+	Agora na classe DeliverResource (nosso controller), em cima do método que criamos e anotamos de @PutMapping vamos adicionar a anotação:
+	@PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')"), dessa forma apenas usuários do tipo Admin ou Instructor poderão acessar esse endpoint.
+
+	5) Caso você prefira fazer isso na classe de Service, no lugar do Controller, basta levar a anotação @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
+	para cima do método lá na classe Service, no nosso caso seria em cima do método saveRevision() da classe DeliverService.

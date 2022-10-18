@@ -1,0 +1,32 @@
+Neste capitulo fizemos as classes/interfaces do tipo Repository:
+
+
+- Criamos o pacote repositories;
+
+
+- Dentro do pacote repositories criamos as interfaces (Todas devem extender de JpaRepository<Class de Dominio, Tipo do ID>):
+
+	-CourseRepository
+	-DeliverRepository
+	-EnrollmentRepository
+	-LessonRepository
+	-NotificationRepository
+	-OfferRepository
+	-ReplyRepository
+	-ResourceRepository
+	-SectionRepository
+	-TopicRepository
+	-UserRepository
+	-RoleRepository
+
+	Obs: 
+
+		- As classes filhas (content e task) não ganharam um repository
+
+		
+
+	
+
+
+
+

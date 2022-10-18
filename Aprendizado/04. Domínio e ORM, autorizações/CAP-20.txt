@@ -1,0 +1,92 @@
+Neste capitulo incluimos ao projeto: exceções, validação e segurança.
+
+
+- Reaproveitamos muitas classes do projeto dscatalog para implementar a validação e tratamento de exceções:
+
+	- Reaproveitamos todas as classes do pacote resources.exceptions: FieldMessage, StandardError, ValidationError e ResourceExceptionHandler;
+
+	- Reaproveitamos todas as classes do pacote services.exceptions: DatabaseExcepetion, ResourceNotFoundException;
+
+	- Adicionamos no projeto, no arquivo pom.xml a dependencia do Validation (fazer validação das anotações!).
+
+
+- Implementando segurança nesse projeto, para isso também aproveitamos classes do projeto dscatalog:
+
+	- Tivemos que adicionar ao projeto, no arquivo pom.xml o trecho (devemos colocar dentro da tag <properties>): 
+
+		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+
+	- Adicionamos as seguintes dependencias para o arquivo pom.xml:
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+		</dependency>
+
+	- Adicionamos o seguinte trecho no arquivo pom.xml (no final do arquivo, antes de fechar a tag </project>):
+
+		<dependencyManagement>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-dependencies</artifactId>
+					<version>${spring-cloud.version}</version>
+					<type>pom</type>
+					<scope>import</scope>
+				</dependency>
+			</dependencies>
+		</dependencyManagement>
+
+	- Copiamos do dscatalog as classes do pacote config, são elas: AppConfig, AuthorizationServerConfig, ResourceServerConfig, WebSecurityConfig 
+	(a classe AuthorizationServerConfig vai ficar com erro até o passo a seguir);
+
+	- Copiamos do dscatalog a classe do pacote components: JwtTokenEnhancer (vai dar erro, pois ainda não temos as findByEmail de UserRepository)
+	Dessa classe tiramos o trecho que pega o FirstName, pois não temos esse campo;
+
+	- Fizemos a classe User implementar UserDetails e implementamos tudo que UserDetail exige (esse implementação pegamos de dscatalog);
+
+	- Criamos dentro do pacote services a classe UserService que vai implementar UserDetailService e implementamos tudo que UserDetailService exige
+	(a implementação copiamos do dscatalog). Tivemos que injetar nessa classe o UserRepository. Lembre-se que essa classe tem que receber @Service
+
+	- Criamos dentro de UserRepository o método findByEmail(String email);
+
+	- No arquivo application.properties adicionamos:
+
+            spring.profiles.active=${APP_PROFILE:test}
+
+            spring.jpa.open-in-view=false
+
+            security.oauth2.client.client-id=${CLIENT_ID:myclientid}
+            security.oauth2.client.client-secret=${CLIENT_SECRET:myclientsecret}
+
+            jwt.secret=${JWT_SECRET:MY-JWT-SECRET}
+            jwt.duration=${JWT_DURATION:86400}
+
+	- Na classe ResourceServerConfig fizemos algumas alterações, pois essa classe foi copiada do projeto dscatalog:
+
+		- Removemos as variáveis/vetores: ADMIN e OPERATOR_OR_ADMIN;
+
+		- E o trecho que autoriza os paths ficou assim:
+
+					http.authorizeRequests()
+					.antMatchers(PUBLIC).permitAll()
+					.anyRequest().authenticated();
+
+
+
+
+
+
+		
+
+	
+
+
+
+

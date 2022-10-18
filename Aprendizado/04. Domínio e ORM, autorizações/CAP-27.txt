@@ -1,0 +1,4 @@
+Neste capitulo foi apresentado o desafio que devemos entregar!
+
+Aqui surgiu a duvida do N:N entre User e Movie, mas não existe esse relacionamento! 
+A tabela Review tem seu próprio ID, logo User tem uma lista de Review e Movie tem uma lista de Review! Ou seja, review não é tabela de relacionamento do N:N...

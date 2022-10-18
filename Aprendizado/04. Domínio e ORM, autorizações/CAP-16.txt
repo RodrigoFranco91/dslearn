@@ -1,0 +1,5 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+
+- Aqui foi para corrigir algumas classes de negócio, pois algumas classes estavam sem relacionamento. Algumas classes não tinham o método get() para alguns
+atributos.

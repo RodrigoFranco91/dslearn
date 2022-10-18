@@ -1,0 +1,8 @@
+Neste capitulo foi apresentado o que vamos aprender no Capítulo 4, nomeado de Domínio e ORM, autorizações.
+
+
+- No caso, veremos:
+
+	- Um dominio mais complexo de ORM;
+	- Mais sobre autorização (Refresh Token, Autorizacao a nivel de serviço, Conteudo customizado para usuário logado e pré-autozição de métodos.)
+	

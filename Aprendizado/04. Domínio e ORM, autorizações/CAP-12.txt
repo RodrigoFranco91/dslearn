@@ -1,0 +1,9 @@
+Neste capitulo continuamos a codificação do projeto DSLearn:
+
+
+- Corrigimos os atributos do tipo Instant, pois não estavamos usando a anotação:
+
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+
+Pois com esta anotação garante a contabilidade caso haja mudança de banco de dados.
+
